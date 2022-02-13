@@ -19,7 +19,7 @@ void QDetachTabWidget::closeEvent (QCloseEvent* e) {
 
         delete it->_widget;
 
-        it = _tabInfo.erase(it);
+        it = _tabInfo.erase(it); // Erase current tab and point to the next one.
     }
 
     QTabWidget::closeEvent(e);
@@ -160,6 +160,8 @@ QList<QDetachTabInfo>::iterator QDetachTabWidget::findWidget (QWidget* widget) {
         if (it->_widget == widget) {
             return it;
         }
+
+        it++;
     }
 
     return it;
@@ -176,6 +178,8 @@ QList<QDetachTabInfo>::iterator QDetachTabWidget::findPlaceholderWidget (QWidget
         if (it->_placeholderWidget == widget) {
             return it;
         }
+
+        it++;
     }
 
     return it;
