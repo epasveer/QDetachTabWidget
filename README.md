@@ -4,7 +4,7 @@ QDetachTabWidget
 QDetachTabWidget is an extenstion of QTabWidget to implement detachable tabs.
 
 Double-click on any tab in the tab widget and it will bring up a small menu to detach the
-tab into a separate window. This separate window can be resized and
+tab into a separate window. The separated window can be resized and
 moved anywhere on your screen. Note, it can not be closed using the window's menu bar.
 
 In the QDetachTabWidget, a blank widget is put in the place of the detached widget.
