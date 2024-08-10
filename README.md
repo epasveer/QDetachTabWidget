@@ -21,6 +21,7 @@ ScreenShot
 ==========
 
 ![](images/screenshot.png)
+![](images/screenshot_reattach.png)
 
 Building QDetachTabWidget demo test program
 ===========================================
