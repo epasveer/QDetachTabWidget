@@ -4,6 +4,18 @@ project(QDetachTabWidget VERSION 1.0.1 LANGUAGES CXX)
 
 set(PROJECT_NAME QDetachTabWidget)
 
+if(NOT DEFINED QTVERSION)
+    set(QTVERSION "QT6" CACHE STRING "" FORCE)
+endif()
+
+if(${QTVERSION} STREQUAL "QT6")
+    message("-- Compile with QT6")
+elseif(${QTVERSION} STREQUAL "QT5")
+    message("-- Compile with QT5")
+else()
+    message(FATAL_ERROR "-- Use -DQTVERSION=QT5|QT6 not \"${QTVERSION}\"")
+endif()
+
 # Find includes in the build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -13,12 +25,24 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_FLAGS_DEBUG_INIT   "-Wall")       # Remove if your compiler
-set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall")       # doesn't support the -Wall flag.
+if(${QTVERSION} STREQUAL "QT6")
+    find_package(Qt6 COMPONENTS REQUIRED Core)
+    find_package(Qt6 COMPONENTS REQUIRED Gui)
+    find_package(Qt6 COMPONENTS REQUIRED Widgets)
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+
+elseif(${QTVERSION} STREQUAL "QT5")
+    find_package(Qt5 COMPONENTS REQUIRED Core)
+    find_package(Qt5 COMPONENTS REQUIRED Gui)
+    find_package(Qt5 COMPONENTS REQUIRED Widgets)
+
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
 
 set(HEADER_FILES
     QDetachTabWidget.h
@@ -34,19 +58,26 @@ set(SOURCE_FILES
 if(NOT CMAKE_BUILD_TYPE MATCHES Debug) #Release, RelWithDebInfo and MinSizeRel
     if(WIN32) # Check if we are on Windows
         set(SYSTEM_TYPE WIN32)
-    elseif(APPLE) # MacOS X
-        set(SYSTEM_TYPE MACOSX_BUNDLE)
-    else() # UNIX
-        set(SYSTEM_TYPE EXCLUDE_FROM_ALL)
     endif()
-    message("System type is" ${SYSTEM_TYPE})
+    message("-- System type is " ${SYSTEM_TYPE})
 endif()
+
+# for Linux, BSD, Solaris, Minix
+if(UNIX AND NOT APPLE)
+    add_compile_options(-Wall -Wextra -Wunused-result -pedantic)   # -Werror -Wdeprecated-copy
+endif()
+
+add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 add_compile_definitions(QT_DEPRECATED_WARNINGS)
 
 add_executable(${PROJECT_NAME} ${SYSTEM_TYPE} ${SOURCE_FILES})
 
-install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Gui Qt5::Core)
+if(${QTVERSION} STREQUAL "QT6")
+    target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::Gui Qt6::Core)
+elseif(${QTVERSION} STREQUAL "QT5")
+    target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Gui Qt5::Core)
+endif()
 
