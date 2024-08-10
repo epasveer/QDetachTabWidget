@@ -3,14 +3,14 @@ QDetachTabWidget
 
 QDetachTabWidget is an extenstion of QTabWidget to implement detachable tabs.
 
-Double-click on any tab in the tab widget will bring up a small menu to detach the
+Doing a RMB click on any tab in the tab widget will bring up a small menu to detach the
 tab into a separate window. The separated window can be resized and
 moved anywhere on your screen. Note, it can not be closed using the window's menu bar.
 
-In the QDetachTabWidget, a blank widget is put in the place of the detached widget.
-QDetachTabWidget remembers the detached widget and the placeholder widget. If you
-double-click the tab again, it will show the small menu again where
-you can then reattach the widget.
+In the QDetachTabWidget, a blank widget is put in the place of the detached widget. This
+blank widget will have a 'Reattach' button in its center. QDetachTabWidget remembers the
+detached widget and the placeholder widget. If you RMB click on the tab again, it will
+show the small menu again where you can then reattach the widget.
 
 This implemenation handles the cases of movable tabs and closeable tabs.
 
@@ -22,8 +22,8 @@ ScreenShot
 
 ![](images/screenshot.png)
 
-Building QDetachTabWidget
-===========================
+Building QDetachTabWidget demo test program
+===========================================
 
 Download the latest code using 'clone'.
 
