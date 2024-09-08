@@ -33,6 +33,15 @@ bool QDetachTabWidget::isDetached (int tabIndex) const {
     return false;
 }
 
+QWidget* QDetachTabWidget::tabWidget (int tabIndex) const {
+
+    if (tabIndex < 0 || tabIndex > _tabInfo.size()) {
+        return nullptr;
+    }
+
+    return _tabInfo[tabIndex]._widget;
+}
+
 void QDetachTabWidget::detachTab (int tabIndex) {
 
     // Get the tab the user selected.
@@ -68,13 +77,14 @@ void QDetachTabWidget::detachTab (int tabIndex) {
     w->setWindowFlags(flags);
     w->setWindowTitle(tabinfo._title);
     w->setWindowIcon(windowIcon());
-    w->show();
+    w->showMinimized();
 
     // Connect the placeholder's 'reattach' signal to the slot.
     QObject::connect(placeholder, &QDetachTabWidgetPlaceholder::reattach,   this, &QDetachTabWidget::handleTabClosedRequested);
 
     // Notify listeners the tab was detached.
     emit tabDetached(tabIndex);
+    emit tabDetached(w);
 }
 
 void QDetachTabWidget::reattachTab (int tabIndex) {
@@ -105,11 +115,15 @@ void QDetachTabWidget::reattachTab (int tabIndex) {
     // Insert the real tab in the same position.
     insertTab(tabIndex, it->_widget, it->_title);
 
+    // Save the real tab's widget before we delete the entry.
+    w = it->_widget;
+
     // Delete the entry from the tab cache.
     _tabInfo.erase(it);
 
     // Notify listeners the tab was reattached.
     emit tabReattached(tabIndex);
+    emit tabReattached(w);
 }
 
 void QDetachTabWidget::closeEvent (QCloseEvent* e) {

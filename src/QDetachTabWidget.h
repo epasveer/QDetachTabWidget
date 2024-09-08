@@ -22,6 +22,7 @@ class QDetachTabWidget : public QTabWidget {
         QDetachTabWidget(QWidget* parent = 0);
 
         bool                                isDetached               (int tabIndex) const;
+        QWidget*                            tabWidget                (int tabIndex) const;
 
     public slots:
         void                                detachTab                (int tabIndex);
@@ -29,7 +30,9 @@ class QDetachTabWidget : public QTabWidget {
 
     signals:
         void                                tabDetached              (int tabIndex);
+        void                                tabDetached              (QWidget* widget);
         void                                tabReattached            (int tabIndex);
+        void                                tabReattached            (QWidget* widget);
 
     protected:
         void                                closeEvent               (QCloseEvent* e);
